@@ -26,6 +26,7 @@ namespace Project
         // HELPERS
         enum MouseButton
         {
+            // Reference: https://docs.unity3d.com/ScriptReference/Input.GetMouseButtonDown.html
             Left = 0,
             Right = 1,
             Middle = 2
