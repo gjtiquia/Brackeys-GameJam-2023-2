@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b6f95ae4129144790f93b5c10b2cd0, type: 3}
   m_Name: GameSettingsSO
   m_EditorClassIdentifier: 
-  LaunchSpeed: 20
+  LaunchSpeed: 25
   ColorPaletteSO: {fileID: 11400000, guid: 3a0de29b50676fd4b96dd198527eb93f, type: 2}
