@@ -32,6 +32,10 @@ namespace Project
                 Vector2 mouseWorldPoint = InputUtilities.GetMouseWorldPoint();
 
                 Vector2 direction = ((Vector2)transform.position - mouseWorldPoint).normalized;
+
+                while (direction.sqrMagnitude <= 0.001f)
+                    direction = ((Vector2)Random.onUnitSphere).normalized;
+
                 UnityAssert.AreApproximatelyEqual(direction.sqrMagnitude, 1f);
 
                 _rigidbody.AddForce(_gameSettings.LaunchSpeed * direction, ForceMode2D.Impulse);
