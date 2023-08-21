@@ -2,17 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace Project
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GameManager : MonoBehaviour
     {
-        
-    }
+        [SerializeField] private GameObject _dummyPrefab;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown((int)MouseButton.Left))
+            {
+                Vector3 mouseScreenPoint = Input.mousePosition;
+                Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(mouseScreenPoint);
+
+                Vector3 spawnPoint = mouseWorldPoint;
+                spawnPoint.z = 0;
+
+                GameObject dummyInstance = Instantiate(_dummyPrefab);
+                dummyInstance.transform.position = spawnPoint;
+            }
+        }
+
+        // HELPERS
+        enum MouseButton
+        {
+            Left = 0,
+            Right = 1,
+            Middle = 2
+        }
     }
 }
+
