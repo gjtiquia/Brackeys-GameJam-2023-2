@@ -12,25 +12,29 @@ namespace Project
         {
             if (Input.GetMouseButtonDown((int)MouseButton.Left))
             {
-                Vector3 mouseScreenPoint = Input.mousePosition;
-                Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(mouseScreenPoint);
-
-                Vector3 spawnPoint = mouseWorldPoint;
-                spawnPoint.z = 0;
-
                 GameObject dummyInstance = Instantiate(_dummyPrefab);
-                dummyInstance.transform.position = spawnPoint;
+                dummyInstance.transform.position = InputUtilities.GetMouseWorldPoint();
             }
         }
+    }
 
-        // HELPERS
-        enum MouseButton
+    public static class InputUtilities
+    {
+        public static Vector2 GetMouseWorldPoint()
         {
-            // Reference: https://docs.unity3d.com/ScriptReference/Input.GetMouseButtonDown.html
-            Left = 0,
-            Right = 1,
-            Middle = 2
+            Vector3 mouseScreenPoint = Input.mousePosition;
+            Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(mouseScreenPoint);
+
+            return mouseWorldPoint;
         }
+    }
+
+    public enum MouseButton
+    {
+        // Reference: https://docs.unity3d.com/ScriptReference/Input.GetMouseButtonDown.html
+        Left = 0,
+        Right = 1,
+        Middle = 2
     }
 }
 
