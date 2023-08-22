@@ -5,9 +5,13 @@ namespace Project
 {
     public enum ColorPaletteName
     {
+        // Main Color Palette
         Light,
         Medium,
-        Dark
+        Dark,
+
+        // Obstacles
+        Destroy
     }
 
     [CreateAssetMenu(fileName = "ColorPaletteSO", menuName = "SO/ColorPaletteSO")]
