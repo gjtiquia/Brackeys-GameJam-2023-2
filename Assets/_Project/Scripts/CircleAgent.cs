@@ -6,6 +6,7 @@ using UnityRandom = UnityEngine.Random;
 namespace Project
 {
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Collider2D))]
     public class CircleAgent : MonoBehaviour
     {
         public event Action OnDestroySelfEvent;
@@ -15,6 +16,7 @@ namespace Project
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
         private Rigidbody2D _rigidbody;
+        private Collider2D _collider;
         private bool _hasFired;
 
         // PUBLIC METHODS
@@ -25,6 +27,7 @@ namespace Project
             _rigidbody.velocity = Vector2.zero;
             _spriteRenderer.color = _gameSettings.ColorPaletteSO.GetColor(ColorPaletteName.Light);
             _spriteRenderer.enabled = true;
+            _collider.enabled = true;
         }
 
         // MonoBehaviour INTERFACE
@@ -32,6 +35,7 @@ namespace Project
         {
             _spriteRenderer.enabled = false;
             _rigidbody = GetComponent<Rigidbody2D>();
+            _collider = GetComponent<Collider2D>();
 
             UnityAssert.IsNotNull(_gameSettings);
             UnityAssert.IsNotNull(_gameSettings.ColorPaletteSO);
@@ -72,6 +76,9 @@ namespace Project
         private void DestroySelf()
         {
             _spriteRenderer.enabled = false;
+            _rigidbody.velocity = Vector2.zero;
+            _collider.enabled = false;
+
             OnDestroySelfEvent?.Invoke();
         }
     }

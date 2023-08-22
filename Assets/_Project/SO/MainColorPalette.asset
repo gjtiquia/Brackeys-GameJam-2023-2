@@ -15,5 +15,7 @@ MonoBehaviour:
   ColorPalettes:
   - Name: 2
     Color: {r: 0.010000003, g: 0.010000003, b: 0.1, a: 1}
+  - Name: 1
+    Color: {r: 0.404717, g: 0.404717, b: 0.6, a: 1}
   - Name: 0
     Color: {r: 0.9025, g: 0.9025, b: 0.95, a: 1}

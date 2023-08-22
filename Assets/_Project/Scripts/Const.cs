@@ -10,6 +10,7 @@ namespace Project
         public static class Tags
         {
             public const string Destroy = "Destroy";
+            public const string Platform = "Platform";
         }
     }
 }

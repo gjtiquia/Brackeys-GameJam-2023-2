@@ -8,14 +8,31 @@ namespace Project
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private CircleAgent _circlePrefab;
-        private CircleAgent _circleInstance;
 
+        private CircleAgent _circleInstance;
+        private List<PlatformAgent> _platformInstances;
         private bool _hasActiveCircle;
 
         private void Awake()
         {
             _hasActiveCircle = false;
             UnityAssert.IsNotNull(_circlePrefab);
+        }
+
+        private void Start()
+        {
+            _platformInstances = new List<PlatformAgent>();
+
+            GameObject[] platformGameObjects = GameObject.FindGameObjectsWithTag(Const.Tags.Platform);
+            foreach (GameObject platformGameObject in platformGameObjects)
+            {
+                bool componentExists = platformGameObject.TryGetComponent(out PlatformAgent platformInstance);
+                if (!componentExists) continue;
+
+                _platformInstances.Add(platformInstance);
+            }
+
+            InitalizeAllPlatforms();
         }
 
         private void Update()
@@ -32,6 +49,7 @@ namespace Project
         {
             CircleAgent circleInstance = LazyLoadCircleInstance();
 
+            _circleInstance.gameObject.SetActive(true);
             circleInstance.transform.position = InputUtilities.GetMouseWorldPoint();
             circleInstance.Initialize();
 
@@ -43,16 +61,24 @@ namespace Project
             if (_circleInstance == null)
             {
                 _circleInstance = Instantiate(_circlePrefab);
-                _circleInstance.OnDestroySelfEvent += OnDestroySelfEvent;
+                _circleInstance.OnDestroySelfEvent += OnActiveCircleDestroyedEvent;
             }
 
             return _circleInstance;
         }
 
-        private void OnDestroySelfEvent()
+        private void OnActiveCircleDestroyedEvent()
         {
             _hasActiveCircle = false;
-            // TODO : Return to object pool
+            _circleInstance.gameObject.SetActive(false);
+
+            InitalizeAllPlatforms();
+        }
+
+        private void InitalizeAllPlatforms()
+        {
+            foreach (PlatformAgent platform in _platformInstances)
+                platform.Initialize();
         }
     }
 }
