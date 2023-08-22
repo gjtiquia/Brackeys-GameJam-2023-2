@@ -11,6 +11,7 @@ namespace Project
         {
             public const string Destroy = "Destroy";
             public const string Platform = "Platform";
+            public const string Coin = "Coin";
         }
     }
 }

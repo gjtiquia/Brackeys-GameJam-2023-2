@@ -11,6 +11,7 @@ namespace Project
 
         private CircleAgent _circleInstance;
         private List<PlatformAgent> _platformInstances;
+        private List<CoinAgent> _coinInstances;
         private bool _hasActiveCircle;
 
         private void Awake()
@@ -21,18 +22,11 @@ namespace Project
 
         private void Start()
         {
-            _platformInstances = new List<PlatformAgent>();
-
-            GameObject[] platformGameObjects = GameObject.FindGameObjectsWithTag(Const.Tags.Platform);
-            foreach (GameObject platformGameObject in platformGameObjects)
-            {
-                bool componentExists = platformGameObject.TryGetComponent(out PlatformAgent platformInstance);
-                if (!componentExists) continue;
-
-                _platformInstances.Add(platformInstance);
-            }
-
+            RegisterAllPlatforms();
             InitalizeAllPlatforms();
+
+            RegisterAllCoins();
+            InitalizeAllCoins();
         }
 
         private void Update()
@@ -73,12 +67,47 @@ namespace Project
             _circleInstance.gameObject.SetActive(false);
 
             InitalizeAllPlatforms();
+            InitalizeAllCoins();
+        }
+
+        private void RegisterAllPlatforms()
+        {
+            _platformInstances = new List<PlatformAgent>();
+
+            GameObject[] platformGameObjects = GameObject.FindGameObjectsWithTag(Const.Tags.Platform);
+            foreach (GameObject platformGameObject in platformGameObjects)
+            {
+                bool componentExists = platformGameObject.TryGetComponent(out PlatformAgent platformInstance);
+                if (!componentExists) continue;
+
+                _platformInstances.Add(platformInstance);
+            }
         }
 
         private void InitalizeAllPlatforms()
         {
             foreach (PlatformAgent platform in _platformInstances)
                 platform.Initialize();
+        }
+
+        private void RegisterAllCoins()
+        {
+            _coinInstances = new List<CoinAgent>();
+
+            GameObject[] coinGameObjects = GameObject.FindGameObjectsWithTag(Const.Tags.Coin);
+            foreach (GameObject coinGameObject in coinGameObjects)
+            {
+                bool componentExists = coinGameObject.TryGetComponent(out CoinAgent coinInstance);
+                if (!componentExists) continue;
+
+                _coinInstances.Add(coinInstance);
+            }
+        }
+
+        private void InitalizeAllCoins()
+        {
+            foreach (CoinAgent coin in _coinInstances)
+                coin.Initialize();
         }
     }
 }
