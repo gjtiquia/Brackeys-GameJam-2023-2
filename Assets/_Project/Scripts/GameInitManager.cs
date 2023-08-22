@@ -9,7 +9,7 @@ namespace Project
     {
         public void StartGame()
         {
-            LevelManager.GotoFirstLevel();
+            LevelManager.LoadFirstLevel();
         }
     }
 }

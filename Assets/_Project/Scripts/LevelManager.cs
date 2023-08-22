@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityAssert = UnityEngine.Assertions.Assert;
 
 namespace Project
@@ -21,21 +22,47 @@ namespace Project
             _instance = this;
         }
 
-        public static void GotoFirstLevel()
+        public static void LoadFirstLevel()
         {
             _currentLevel = 1;
-
-            // TODO : Additive Loading Scene
-            // Const.Scenes.LoadingScene
-            // TODO : Change to first level game scene
+            _instance.StartCoroutine(_instance.LoadLevelCoroutine());
         }
 
-        public static void GotoNextLevel()
+        public static void TryLoadNextLevel()
         {
-            _currentLevel++; // TODO : Check if is the last level
+            _currentLevel++;
+            // TODO : Check if is the last level
 
-            // TODO : Additive Loading Scene
-            // TODO : Change to next level game scene
+            _instance.StartCoroutine(_instance.LoadLevelCoroutine());
+        }
+
+        private IEnumerator LoadLevelCoroutine()
+        {
+            yield return LoadLoadingSceneCoroutine();
+
+            // TODO : Do some cool transition showing the level number
+            yield return new WaitForSeconds(1);
+
+            yield return LoadGameSceneCoroutine();
+        }
+
+        private IEnumerator LoadLoadingSceneCoroutine()
+        {
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Const.Scenes.LoadingScene, LoadSceneMode.Additive);
+
+            while (!asyncLoad.isDone)
+                yield return null;
+        }
+
+        private IEnumerator LoadGameSceneCoroutine()
+        {
+            // TODO : Choose the correct scene based on the current level
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameScene-001"); // Overrides all current scenes and sets itself as the active scene
+
+            while (!asyncLoad.isDone)
+                yield return null;
+
+            UnityAssert.AreEqual(SceneManager.GetActiveScene().name, "GameScene-001");
         }
     }
 }
