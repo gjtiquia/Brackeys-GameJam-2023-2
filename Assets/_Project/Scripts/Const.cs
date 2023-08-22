@@ -13,6 +13,11 @@ namespace Project
             public const string Platform = "Platform";
             public const string Coin = "Coin";
         }
+
+        public static class Scenes
+        {
+            public const string LoadingScene = "LoadingScene";
+        }
     }
 }
 
