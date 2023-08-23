@@ -12,20 +12,29 @@ namespace Project
         private CircleAgent _circleInstance;
         private List<PlatformAgent> _platformInstances;
         private List<CoinAgent> _coinInstances;
+
         private bool _hasActiveCircle;
+        private int _collectedCoins;
 
         private void Awake()
         {
-            _hasActiveCircle = false;
             UnityAssert.IsNotNull(_circlePrefab);
         }
 
         private void Start()
         {
             RegisterAllPlatforms();
-            InitalizeAllPlatforms();
-
             RegisterAllCoins();
+
+            InitializeEverything();
+        }
+
+        private void InitializeEverything()
+        {
+            _hasActiveCircle = false;
+            _collectedCoins = 0;
+
+            InitalizeAllPlatforms();
             InitalizeAllCoins();
         }
 
@@ -63,11 +72,8 @@ namespace Project
 
         private void OnActiveCircleDestroyedEvent()
         {
-            _hasActiveCircle = false;
             _circleInstance.gameObject.SetActive(false);
-
-            InitalizeAllPlatforms();
-            InitalizeAllCoins();
+            InitializeEverything();
         }
 
         private void RegisterAllPlatforms()
@@ -100,6 +106,7 @@ namespace Project
                 bool componentExists = coinGameObject.TryGetComponent(out CoinAgent coinInstance);
                 if (!componentExists) continue;
 
+                coinInstance.OnCollectedEvent += OnCoinCollected;
                 _coinInstances.Add(coinInstance);
             }
         }
@@ -108,6 +115,18 @@ namespace Project
         {
             foreach (CoinAgent coin in _coinInstances)
                 coin.Initialize();
+        }
+
+        private void OnCoinCollected()
+        {
+            _collectedCoins++;
+
+            if (_collectedCoins == _coinInstances.Count)
+            {
+                Debug.Log("All coins collected!");
+                _circleInstance.OnCollectedAllCoins();
+                LevelManager.TryLoadNextLevel();
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Project
 {
     public class LevelManager : MonoBehaviour
     {
+        [SerializeField] LevelSO _levelSO;
+
         private static LevelManager _instance;
         private static int _currentLevel;
 
@@ -20,6 +22,7 @@ namespace Project
             }
 
             _instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
 
         public static void LoadFirstLevel()
@@ -30,10 +33,18 @@ namespace Project
 
         public static void TryLoadNextLevel()
         {
-            _currentLevel++;
-            // TODO : Check if is the last level
+            if (_instance == null) return;
 
-            _instance.StartCoroutine(_instance.LoadLevelCoroutine());
+            _currentLevel++;
+
+            if (_instance._levelSO.LevelExists(_currentLevel))
+            {
+                _instance.StartCoroutine(_instance.LoadLevelCoroutine());
+            }
+            else
+            {
+                // TODO : Load finish scene? Thanks for playing?
+            }
         }
 
         private IEnumerator LoadLevelCoroutine()
@@ -56,13 +67,13 @@ namespace Project
 
         private IEnumerator LoadGameSceneCoroutine()
         {
-            // TODO : Choose the correct scene based on the current level
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameScene-001"); // Overrides all current scenes and sets itself as the active scene
+            string sceneName = _levelSO.GetGameSceneName(_currentLevel);
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName); // Overrides all current scenes and sets itself as the active scene
 
             while (!asyncLoad.isDone)
                 yield return null;
 
-            UnityAssert.AreEqual(SceneManager.GetActiveScene().name, "GameScene-001");
+            UnityAssert.AreEqual(SceneManager.GetActiveScene().name, sceneName);
         }
     }
 }

@@ -30,6 +30,14 @@ namespace Project
             _collider.enabled = true;
         }
 
+        public void OnCollectedAllCoins()
+        {
+            // TODO : some particle effect?
+            // TODO : Some disappear effect?
+
+            _rigidbody.velocity = Vector2.zero;
+        }
+
         // MonoBehaviour INTERFACE
         private void Awake()
         {
